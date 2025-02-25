@@ -50,18 +50,20 @@ class DataIngestionFactory:
     
 #Example usage
 if __name__ == '__main__':
-    #specify the file path
-    file_path = r'C:\Users\Akhil.Reddy\Desktop\Loantap\data\logistic_regression.zip'
+    # #specify the file path
+    # file_path = r'C:\Users\Akhil.Reddy\Desktop\Loantap\data\logistic_regression.zip'
 
-    # Determine the file extension
-    file_extension = os.path.splitext(file_path)[-1][1:]
+    # # Determine the file extension
+    # file_extension = os.path.splitext(file_path)[-1][1:]
 
-    #create an instance of the ZipDataIngestor class
-    data_ingestor = DataIngestionFactory.get_data_ingestor(file_extension)
+    # #create an instance of the ZipDataIngestor class
+    # data_ingestor = DataIngestionFactory.get_data_ingestor(file_extension)
 
-    #Here we have the data stored in the dataframe
+    # #Here we have the data stored in the dataframe
 
-    df = data_ingestor.ingest(file_path)
+    # df = data_ingestor.ingest(file_path)
+
+    pass
 
 
 
