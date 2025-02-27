@@ -99,6 +99,103 @@ plt.show()
 | Correlation with Other Variables | Data is MAR | Data is MCAR or MNAR |
 | Different Distribution of Missing Data | Data is MNAR | Data is MAR or MCAR |
 
-## **Conclusion**
-Identifying the type of missing data is crucial for applying the right imputation method. Understanding MCAR, MAR, and MNAR ensures that machine learning models are not biased due to missing values. By using visualization and statistical tests, we can make informed decisions about handling missing data.
+---
+
+## **Techniques to Handle Missing Values**
+
+### **1. Removing Missing Values**
+Useful for MCAR data when missingness is low.
+```python
+df_cleaned = df.dropna()  # Drop rows with missing values
+df_cleaned = df.drop(columns=['column_name'])  # Drop columns with too many missing values
+```
+✅ **Best for:** Minimal missing data, MCAR scenarios.
+
+### **2. Mean/Median/Mode Imputation**
+For numerical data:
+```python
+df['column_name'].fillna(df['column_name'].mean(), inplace=True)  # Mean
+```
+For categorical data:
+```python
+df['category_column'].fillna(df['category_column'].mode()[0], inplace=True)  # Mode
+```
+✅ **Best for:** MAR data, univariate missingness.
+
+### **3. K-Nearest Neighbors (KNN) Imputation**
+```python
+from sklearn.impute import KNNImputer
+import pandas as pd
+
+imputer = KNNImputer(n_neighbors=3)
+df_imputed = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
+```
+✅ **Best for:** MAR data with patterns.
+
+### **4. Regression Imputation**
+Predict missing values using regression:
+```python
+from sklearn.linear_model import LinearRegression
+
+known_data = df[df['column_name'].notnull()]
+missing_data = df[df['column_name'].isnull()]
+
+model = LinearRegression()
+model.fit(known_data[['other_feature']], known_data['column_name'])
+
+df.loc[df['column_name'].isnull(), 'column_name'] = model.predict(missing_data[['other_feature']])
+```
+✅ **Best for:** MAR data with strong correlations.
+
+### **5. Multiple Imputation (MICE)**
+```python
+from sklearn.experimental import enable_iterative_imputer  
+from sklearn.impute import IterativeImputer  
+
+imputer = IterativeImputer()
+df_imputed = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
+```
+✅ **Best for:** MAR data with complex relationships.
+
+### **6. Deep Learning-Based Imputation**
+```python
+from sklearn.impute import SimpleImputer
+import tensorflow as tf
+
+imputer = SimpleImputer(strategy='mean')
+df_imputed = imputer.fit_transform(df)
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(df.shape[1], activation='linear')
+])
+
+model.compile(optimizer='adam', loss='mse')
+model.fit(df_imputed, df_imputed, epochs=10, batch_size=16)
+```
+✅ **Best for:** MNAR data in large datasets.
+
+---
+
+## **Which Method Should You Choose?**
+
+| **Method** | **Suitable For** | **Complexity** |
+|------------|----------------|---------------|
+| Drop Missing Values | MCAR, Low Missingness | Low |
+| Mean/Median/Mode Imputation | MAR, Univariate Data | Low |
+| KNN Imputation | MAR, Pattern-Based Missingness | Medium |
+| Regression Imputation | MAR, Correlated Features | Medium |
+| MICE (Iterative Imputation) | MAR, Complex Relationships | High |
+| Deep Learning Imputation | MNAR, Large Datasets | High |
+
+---
+
+## **Final Thoughts**
+Handling missing values correctly is essential for building reliable machine learning models. Simple techniques like mean imputation work in some cases, while advanced methods like KNN, MICE, or deep learning improve accuracy. The right approach depends on the nature of missingness and dataset complexity.
+
+By applying the correct technique, you can ensure that your models are both **robust** and **accurate**!
+
+🚀 **Ready to improve your data preprocessing? Try these methods on your dataset today!**
+
 
